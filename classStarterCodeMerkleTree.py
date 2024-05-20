@@ -132,8 +132,13 @@ def verify_file(root_hash, proof, file_path):
     """
     file_hash = hash_file(file_path)
     combined_hash = file_hash
-    for hash_value in proof:
-        combined_hash = hashlib.sha256((combined_hash + hash_value).encode('utf-8')).hexdigest()
+
+    for i, hash_value in enumerate(proof):
+        if i % 2 == 0: #left sibling
+            combined_hash = hashlib.sha256((hash_value + combined_hash).encode('utf-8')).hexdigest()
+        else: #right sibling
+            combined_hash = hashlib.sha256((combined_hash + hash_value).encode('utf-8')).hexdigest()
+
     return combined_hash == root_hash
 
 # Task 4: Testing
@@ -155,23 +160,24 @@ def main():
     # Get the root hash of the Merkle Tree
     root_hash = merkle_tree.get_root()
     print(f"Merkle Tree Root Hash: {root_hash}")
-
+    print()
     # Generate proof for one of the files
     test_file = files[1]
     proof = merkle_tree.generate_proof(files.index(test_file))
 
     print(f"Proof for {test_file}: {proof}")
+    print()
 
     # Create a modified version of the test file
     original_file_path = test_file
     original_file_hash = hash_file(original_file_path)
     print(f"Hash of the original file ({original_file_path}): {original_file_hash}")
-
+    print()
     # Check if the hash of the original file matches the hash in the leaf node
     original_leaf_hash = merkle_tree.leaf_nodes[files.index(test_file)].hash_value
     print(f"Hash in the Merkle Tree leaf node for {original_file_path}: {original_leaf_hash}")
     print(f"Do they match? {'Yes' if original_file_hash == original_leaf_hash else 'No'}")
-    
+    print()
     
     modified_file_path = "modified_" + test_file
 
