@@ -164,6 +164,15 @@ def main():
 
     # Create a modified version of the test file
     original_file_path = test_file
+    original_file_hash = hash_file(original_file_path)
+    print(f"Hash of the original file ({original_file_path}): {original_file_hash}")
+
+    # Check if the hash of the original file matches the hash in the leaf node
+    original_leaf_hash = merkle_tree.leaf_nodes[files.index(test_file)].hash_value
+    print(f"Hash in the Merkle Tree leaf node for {original_file_path}: {original_leaf_hash}")
+    print(f"Do they match? {'Yes' if original_file_hash == original_leaf_hash else 'No'}")
+    
+    
     modified_file_path = "modified_" + test_file
 
     with open(modified_file_path, 'w') as f:
@@ -177,8 +186,8 @@ def main():
     print(f"Modified file validation: {is_modified_valid}")
 
     # Clean up the created files
-    # for file in files + [modified_file_path]:
-    #     os.remove(file)
+    for file in files + [modified_file_path]:
+        os.remove(file)
 
 if __name__ == "__main__":
     main()
