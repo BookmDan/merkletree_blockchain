@@ -82,7 +82,6 @@ class MerkleTree:
                 left_node.parent = parent_node
                 right_node.parent = parent_node
                 new_level.append(parent_node)
-                # new_level.append(Node(hash_value=combined_hash, left=left_node, right=right_node))
             nodes = new_level
         self.root = nodes[0] if nodes else None
 
